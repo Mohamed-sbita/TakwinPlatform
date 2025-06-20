@@ -1,0 +1,46 @@
+<div class="container">
+    <div class="header">
+        <h1>Emploi du temps - {{emploi?.titre}}</h1>
+        <div *ngIf="emploi?.description" class="description">
+            {{emploi.description}}
+        </div>
+        <div *ngIf="emploi?.classe" class="classe-info">
+            Classe: {{emploi.classe.nom}}
+        </div>
+    </div>
+
+    <div *ngIf="isLoading" class="loading">
+        <div class="spinner"></div>
+        <p>Chargement en cours...</p>
+    </div>
+
+    <div *ngIf="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+    </div>
+
+    <div *ngIf="!isLoading && emploi" class="emploi-table-container">
+        <table class="emploi-table">
+            <thead>
+                <tr class="header-row">
+                    <th></th>
+                    <th *ngFor="let slot of timeSlots" class="time-slot-header">
+                        {{slot.start}} - {{slot.end}}
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let day of daysOrder">
+                    <th class="day-header">{{day}}</th>
+                    <td *ngFor="let slot of timeSlots" class="time-slot-cell">
+                        <div *ngFor="let creneau of getCreneauxForTimeSlot(day, slot)" class="creneau-info">
+                            <strong>{{creneau.matiere.nom}}</strong><br>
+                            {{creneau.formateur.nom}}<br>
+                            {{creneau.classe.nom}} 
+                            {{creneau.salle ? ' - ' + creneau.salle : ''}}
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

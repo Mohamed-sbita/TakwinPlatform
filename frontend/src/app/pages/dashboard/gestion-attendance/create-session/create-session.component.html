@@ -1,0 +1,71 @@
+<div class="session-create container py-4">
+    <h2 class="text-center mb-4">Créer une Nouvelle Séance</h2>
+    
+    <form [formGroup]="sessionForm" (ngSubmit)="onSubmit()" class="card p-4 shadow-sm">
+      <!-- Matière -->
+      <div class="mb-3">
+        <label for="matiere" class="form-label">Matière :</label>
+        <select id="matiere" class="form-select" formControlName="matiere" required>
+          <option value="">Sélectionnez une matière</option>
+          <option *ngFor="let matiere of matieres" [value]="matiere._id">
+            {{ matiere.nom }}
+          </option>
+        </select>
+        <div *ngIf="sessionForm.get('matiere')?.invalid && sessionForm.get('matiere')?.touched" 
+             class="invalid-feedback d-block">
+          La matière est obligatoire
+        </div>
+      </div>
+  
+      <!-- Groupe -->
+      <div class="mb-3">
+        <label for="groupe" class="form-label">Groupe :</label>
+        <select id="groupe" class="form-select" formControlName="groupe" required>
+          <option value="">Sélectionnez un groupe</option>
+          <option *ngFor="let groupe of groupes" [value]="groupe._id">
+            {{ groupe.nom }}
+          </option>
+        </select>
+        <div *ngIf="sessionForm.get('groupe')?.invalid && sessionForm.get('groupe')?.touched" 
+             class="invalid-feedback d-block">
+          Le groupe est obligatoire
+        </div>
+      </div>
+  
+      <!-- Créneau horaire -->
+      <div class="mb-3">
+        <label for="creneau" class="form-label">Créneau horaire :</label>
+        <select id="creneau" class="form-select" formControlName="creneau" required>
+          <option value="">Sélectionnez un créneau</option>
+          <option *ngFor="let creneau of creneauxHoraires" 
+                  [value]="creneau.heureDebut + '-' + creneau.heureFin">
+            {{ creneau.heureDebut }} - {{ creneau.heureFin }}
+          </option>
+        </select>
+        <div *ngIf="sessionForm.get('creneau')?.invalid && sessionForm.get('creneau')?.touched" 
+             class="invalid-feedback d-block">
+          Le créneau horaire est obligatoire
+        </div>
+      </div>
+  
+      <!-- Date -->
+      <div class="mb-4">
+        <label for="date" class="form-label">Date :</label>
+        <input type="date" id="date" class="form-control" formControlName="date" required>
+        <div *ngIf="sessionForm.get('date')?.invalid && sessionForm.get('date')?.touched" 
+             class="invalid-feedback d-block">
+          La date est obligatoire
+        </div>
+      </div>
+  
+      <!-- Actions -->
+      <div class="d-flex justify-content-end gap-2">
+        <button type="button" routerLink="/dashboard/sessions" class="btn btn-outline-secondary">
+          Annuler
+        </button>
+        <button type="submit" [disabled]="sessionForm.invalid" class="btn btn-primary">
+          Créer la Séance
+        </button>
+      </div>
+    </form>
+</div>

@@ -1,0 +1,154 @@
+<div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-md-10 col-lg-8">
+        <div class="card border-0 shadow-lg">
+          <!-- Tab Navigation -->
+          <div class="card-header bg-white border-bottom-0 p-0">
+            <ul class="nav nav-tabs">
+              <li class="nav-item">
+                <button class="nav-link" 
+                        [class.active]="activeTab === 'request'"
+                        (click)="switchTab('request')">
+                  <i class="bx bx-file me-1"></i> Nouvelle demande
+                </button>
+              </li>
+              <li class="nav-item">
+                <button class="nav-link" 
+                        [class.active]="activeTab === 'history'"
+                        (click)="switchTab('history')">
+                  <i class="bx bx-history me-1"></i> Mes demandes
+                </button>
+              </li>
+            </ul>
+          </div>
+  
+          <div class="card-body p-4">
+            <!-- Request Form Tab -->
+            <div *ngIf="activeTab === 'request'">
+              <!-- Success Message -->
+              <div *ngIf="showSuccess" class="alert alert-success alert-dismissible fade show d-flex align-items-center mb-4">
+                <i class="bx bx-check-circle me-2 fs-5"></i>
+                <div class="flex-grow-1">{{ message }}</div>
+                <button type="button" class="btn-close" (click)="showSuccess = false"></button>
+              </div>
+  
+              <!-- Error Message -->
+              <div *ngIf="error" class="alert alert-danger alert-dismissible fade show d-flex align-items-center mb-4">
+                <i class="bx bx-error-circle me-2 fs-5"></i>
+                <div class="flex-grow-1">{{ error }}</div>
+                <button type="button" class="btn-close" (click)="error = ''"></button>
+              </div>
+  
+              <form [formGroup]="attestationForm" (ngSubmit)="onSubmit()" novalidate>
+                <div class="text-center mb-4">
+                  <div class="mb-3">
+                    <i class="bx bx-file-blank text-primary" style="font-size: 3rem;"></i>
+                  </div>
+                  <h4 class="fw-semibold mb-2">Demande d'attestation</h4>
+                  <p class="text-muted mb-0">Soumettez votre demande pour obtenir une attestation de présence officielle.</p>
+                </div>
+  
+                <!-- Terms Checkbox -->
+                <div class="mb-4 form-check">
+                  <div class="form-check-card p-3 rounded-2" 
+                       [ngClass]="{ 'border-danger': attestationForm.get('agreeTerms')?.touched && attestationForm.get('agreeTerms')?.errors }">
+                    <input
+                      type="checkbox"
+                      formControlName="agreeTerms"
+                      class="form-check-input mt-0 me-2"
+                      id="agreeTerms">
+                    <label class="form-check-label fw-medium" for="agreeTerms">
+                      Je confirme ma demande d'attestation <span class="text-danger">*</span>
+                    </label>
+                  </div>
+                  <div *ngIf="attestationForm.get('agreeTerms')?.touched && attestationForm.get('agreeTerms')?.errors" 
+                       class="text-danger small mt-1 ps-2">
+                    <i class="bx bx-info-circle me-1"></i> Vous devez confirmer votre demande
+                  </div>
+                </div>
+  
+                <!-- Submit Button -->
+                <div class="d-grid gap-2 mt-4">
+                  <button
+                    type="submit"
+                    class="btn btn-primary py-2 fw-semibold"
+                    [disabled]="isLoading || attestationForm.invalid">
+                    <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+                    <i *ngIf="!isLoading" class="bx bx-send me-2"></i>
+                    {{ isLoading ? 'Envoi en cours...' : 'Demander mon attestation' }}
+                  </button>
+                </div>
+              </form>
+            </div>
+  
+            <!-- Requests History Tab -->
+            <div *ngIf="activeTab === 'history'">
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="mb-0 fw-semibold">
+                  <i class="bx bx-time me-2"></i> Historique des demandes
+                </h5>
+                <span class="badge bg-primary rounded-pill">
+                  {{ userRequests.length }} demande(s)
+                </span>
+              </div>
+  
+              <div *ngIf="isFetchingRequests" class="text-center py-3">
+                <div class="spinner-border text-primary"></div>
+                <p class="mt-2">Chargement en cours...</p>
+              </div>
+  
+              <div *ngIf="!isFetchingRequests && userRequests.length === 0" class="text-center py-5">
+                <i class="bx bx-file-blank fs-1 text-muted mb-3"></i>
+                <p class="text-muted">Aucune demande trouvée</p>
+                <button class="btn btn-outline-primary mt-3" (click)="switchTab('request')">
+                  <i class="bx bx-plus me-1"></i> Faire une demande
+                </button>
+              </div>
+  
+              <div *ngIf="!isFetchingRequests && userRequests.length > 0" class="table-responsive">
+                <table class="table table-hover align-middle">
+                  <thead class="table-light">
+                    <tr>
+                      <th>Date demande</th>
+                      <th>Statut</th>
+                      <th>Date traitement</th>
+                      
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let request of userRequests">
+                      <td>{{ request.requestedAt | date:'mediumDate' }}</td>
+                      <td>
+                        <span class="badge rounded-pill" 
+                              [ngClass]="'bg-' + getStatusColor(request.status)">
+                          {{ getStatusText(request.status) }}
+                        </span>
+                      </td>
+                      <td>
+                        {{ request.processedAt ? (request.processedAt | date:'mediumDate') : '-' }}
+                      </td>
+                      <td>
+                      
+                        <span *ngIf="request.status !== 'approved'" class="text-muted small">
+                          Non disponible
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+  
+          <div class="card-footer bg-light py-3">
+            <div class="d-flex justify-content-between align-items-center">
+              <small class="text-muted">
+                <i class="bx bx-info-circle me-1"></i> Pour toute question, contactez l'administration
+              </small>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

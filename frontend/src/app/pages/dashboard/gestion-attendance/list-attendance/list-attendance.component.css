@@ -1,0 +1,18 @@
+.attendance-list {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .session-info .card-header {
+    font-weight: 500;
+  }
+  
+  .table th {
+    background-color: #f8f9fa;
+    font-weight: 500;
+  }
+  
+  .actions {
+    margin-top: 20px;
+  }

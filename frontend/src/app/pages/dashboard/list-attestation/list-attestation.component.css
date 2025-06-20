@@ -1,0 +1,52 @@
+.avatar-sm {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .table th {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    color: #6c757d;
+    border-bottom-width: 1px;
+  }
+  
+  .table td {
+    vertical-align: middle;
+    padding: 1rem 0.75rem;
+  }
+  
+  .card-header {
+    border-radius: 0.5rem 0.5rem 0 0 !important;
+  }
+  
+  .page-link {
+    cursor: pointer;
+  }
+  
+  .btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+  }
+  
+  .badge {
+    padding: 0.35em 0.65em;
+    font-weight: 500;
+  }
+  
+  .table-hover tbody tr:hover {
+    background-color: rgba(13, 110, 253, 0.05);
+  }
+  
+  /* Status badge colors */
+  .bg-warning {
+    background-color: #ffc107 !important;
+    color: #212529;
+  }
+  .bg-success {
+    background-color: #198754 !important;
+  }
+  .bg-danger {
+    background-color: #dc3545 !important;
+  }

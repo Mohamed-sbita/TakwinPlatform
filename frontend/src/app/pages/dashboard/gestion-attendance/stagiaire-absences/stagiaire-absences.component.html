@@ -1,0 +1,116 @@
+<div class="container mt-4">
+    <h2 class="mb-4">Mes Absences</h2>
+
+    <!-- Loading and Error Messages -->
+    <div *ngIf="isLoading" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-2">Chargement de vos données...</p>
+    </div>
+
+    <div *ngIf="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+    </div>
+
+    <!-- Summary Card -->
+    <div *ngIf="!isLoading && absencesData" class="card mb-4">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">Résumé</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card bg-light mb-3">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Total Absences</h5>
+                            <p class="card-text display-4">{{ absencesData.totalAbsences }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <p class="lead">Ce tableau montre l'historique de vos absences. Contactez votre formateur si vous pensez qu'il y a une erreur.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters Section -->
+    <div *ngIf="!isLoading && absencesData" class="card mb-4">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">Filtres</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label for="statusFilter" class="form-label">Statut</label>
+                    <select class="form-select" id="statusFilter" 
+                            [(ngModel)]="statusFilter">
+                        <option value="all">Tous les statuts</option>
+                        <option value="absent">Absent</option>
+                        <option value="late">Retard</option>
+                        <option value="excused">Excusé</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="startDate" class="form-label">Date de début</label>
+                    <input type="date" class="form-control" id="startDate"
+                           [(ngModel)]="dateRange.start">
+                </div>
+                <div class="col-md-4">
+                    <label for="endDate" class="form-label">Date de fin</label>
+                    <input type="date" class="form-control" id="endDate"
+                           [(ngModel)]="dateRange.end">
+                </div>
+                <div class="col-md-12 text-end">
+                    <button class="btn btn-primary me-2" (click)="resetFilters()">
+                        Réinitialiser
+                    </button>
+                    <button class="btn btn-success" (click)="loadAbsences()">
+                        Appliquer
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Absences Table -->
+    <div *ngIf="!isLoading && absencesData" class="card">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">Détail des Absences</h5>
+        </div>
+        <div class="card-body">
+            <div *ngIf="filteredAbsences.length === 0" class="alert alert-info">
+                Aucune absence trouvée avec les critères sélectionnés.
+            </div>
+
+            <div *ngIf="filteredAbsences.length > 0" class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Matière</th>
+                            <th>Groupe</th>
+                            <th>Formateur</th>
+                            <th>Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let absence of filteredAbsences">
+                            <td>{{ absence.date | date:'dd/MM/yyyy' }}</td>
+                            <td>{{ absence.matiere }}</td>
+                            <td>{{ absence.groupe }}</td>
+                            <td>{{ absence.formateur }}</td>
+                            <td>
+                                <span [class]="getStatusClass(absence.status)">
+                                    {{ getStatusLabel(absence.status) }}
+                                </span>
+                            </td>
+                           
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,35 @@
+.table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+  }
+  
+  .btn-group .btn {
+    border-radius: 4px;
+  }
+  
+  .my-pagination ::ng-deep .ngx-pagination {
+    margin-bottom: 0;
+  }
+  
+  .my-pagination ::ng-deep .ngx-pagination .current {
+    background: #3f51b5;
+    border-radius: 4px;
+  }
+  
+  .my-pagination ::ng-deep .ngx-pagination a:hover {
+    background: #e9ecef;
+    border-radius: 4px;
+  }
+  
+  @media (max-width: 768px) {
+    .btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    
+    .btn-group .btn {
+      width: 100%;
+      margin-left: 0 !important;
+    }
+  }

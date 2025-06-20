@@ -1,0 +1,102 @@
+<header id="page-topbar">
+    <div class="navbar-header">
+        <div class="d-flex">
+            <!-- LOGO -->
+            <div class="navbar-brand-box">
+                <a class="logo logo-dark">
+                    <span class="logo-sm">
+                        <img src="../../../../assets/logotakwin.jpeg" alt="" height="22">
+                    </span>
+                    <span class="logo-lg">
+                        <img src="../../../../assets/logotakwin.jpeg" alt="" height="17">
+                    </span>
+                </a>
+
+                <a href="index.html" class="logo logo-light">
+                    <span class="logo-sm">
+                        <img src="../../../../assets/logotakwin.jpeg" alt="" height="30">
+                    </span>
+                    <span class="logo-lg text-light">
+                        <img src="../../../../assets/logotakwin.jpeg" alt="" width="150" height="100">
+                       
+                    </span>
+                </a>
+            </div>
+
+            <button type="button" class="btn btn-sm px-3 font-size-16 header-item waves-effect d-lg-none" id="vertical-menu-btn">
+              <i class="fa fa-fw fa-bars"></i>
+            </button>
+
+        </div>
+
+        <div class="d-flex">
+<!-- Notification Icon -->
+<div class="dropdown d-inline-block me-3">
+    <button type="button"
+            class="btn header-item noti-icon waves-effect position-relative"
+            id="page-header-notifications-dropdown"
+            data-bs-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false">
+      <i class="bx bx-bell bx-tada"></i>
+  
+      <!-- Point rouge -->
+      <span *ngIf="notifications.length > 0"
+            class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"
+            style="width: 30px; height: 20px;">
+        <span class="visually-hidden">Nouvelle notification</span>
+      </span>
+    </button>
+  
+    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0">
+      <div class="p-3">
+        <h6 class="m-0" key="t-notifications">Notifications</h6>
+      </div>
+      <div style="max-height: 300px; overflow-y: auto;">
+        <ng-container *ngIf="notifications?.length; else noNotif">
+          <a *ngFor="let notif of notifications" class="dropdown-item notify-item">
+            <div class="d-flex" (click)="markNotificationsAsRead(notif.id)">
+              <div class="flex-grow-1">
+                <h6 class="mt-0 mb-1">{{ notif.titre }}</h6>
+                <div class="font-size-12 text-muted">
+                  {{ notif.contenu | slice:0:10 }}...
+                  <p class="mb-0 text-muted">
+                    <i class="mdi mdi-clock-outline"></i>
+                    {{ notif.date | date:'dd/MM/yyyy à HH:mm' }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </a>
+        </ng-container>
+        <ng-template #noNotif>
+          <p class="dropdown-item text-muted text-center">Aucune notification</p>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+  
+  
+
+            <div class="dropdown d-inline-block">
+                <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
+                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <img class="rounded-circle header-profile-user" [src]="'http://127.0.0.1:3000/files/' + user.image"
+                        alt="Header Avatar">
+                    <span class="d-none d-xl-inline-block ms-1" key="t-henry"> {{ user.nom + ' ' + user.prenom}} </span>
+                    <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end">
+                    <!-- item-->
+                    <a class="dropdown-item" routerLink="/dashboard/profile"><i
+                            class="bx bx-user font-size-16 align-middle me-1"></i> <span
+                            key="t-profile">Profile</span></a>
+                    <div class="dropdown-divider"></div>
+                    <a (click)="logout()" class="dropdown-item text-danger"><i
+                            class="bx bx-power-off font-size-16 align-middle me-1 text-danger"></i> <span
+                            key="t-logout">Déconnexion</span></a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</header>

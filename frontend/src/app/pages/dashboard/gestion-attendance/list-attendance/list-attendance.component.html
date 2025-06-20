@@ -1,0 +1,116 @@
+<div class="attendance-list">
+    <h2 class="text-center mb-4">Fiches de Présence</h2>
+    
+    <!-- Loading State (identique en logique) -->
+    <div *ngIf="isLoading" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Chargement...</span>
+      </div>
+      <p class="mt-3">Chargement des données de présence...</p>
+    </div>
+  
+    <!-- Contenu principal (même structure logique) -->
+    <div *ngIf="!isLoading">
+      <!-- Info Session (même condition *ngIf) -->
+      <div class="session-info card mb-3" *ngIf="attendanceData?.session">
+        <div class="card-header bg-primary text-white">
+          <h3 class="h5 mb-0" style="color: white;">
+            Séance : {{ attendanceData.session.matiere?.nom }} - 
+            {{ attendanceData.session.groupe?.nom }}
+          </h3>
+        </div>
+        <div class="card-body">
+          <p class="mb-1">
+            <strong>Date :</strong> {{ attendanceData.session.date | date:'mediumDate' }}
+          </p>
+          <p class="mb-0">
+            <strong>Heure :</strong> {{ attendanceData.session.creneau }}
+          </p>
+        </div>
+      </div>
+  
+      <!-- Résumé présence (même condition et appel à countStatus()) -->
+      <div class="attendance-summary card mb-4" *ngIf="attendanceData?.attendance">
+        <div class="card-body">
+          <div class="row text-center">
+            <div class="col">
+              <span class="d-block fs-4">{{ attendanceData.attendance.length }}</span>
+              <span class="text-muted">Étudiants</span>
+            </div>
+            <div class="col">
+              <span class="d-block fs-4 text-success">{{ countStatus('present') }}</span>
+              <span class="text-muted">Présents</span>
+            </div>
+            <div class="col">
+              <span class="d-block fs-4 text-danger">{{ countStatus('absent') }}</span>
+              <span class="text-muted">Absents</span>
+            </div>
+            <div class="col">
+              <span class="d-block fs-4 text-warning">{{ countStatus('late') }}</span>
+              <span class="text-muted">Retards</span>
+            </div>
+            <div class="col">
+              <span class="d-block fs-4 text-info">{{ countStatus('excused') }}</span>
+              <span class="text-muted">Excusés</span>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Tableau présence (même boucle *ngFor) -->
+      <div class="card mb-4" *ngIf="attendanceData?.attendance?.length > 0">
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover mb-0">
+              <thead>
+                <tr>
+                  <th>Étudiant</th>
+                  <th>Statut</th>
+                  <th>Remarques</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let record of attendanceData.attendance">
+                  <td>
+                    {{ record.stagiaire?.nom }} {{ record.stagiaire?.prenom }}
+                  </td>
+                  <td>
+                    <span class="badge" [ngClass]="{
+                      'bg-success': record.status === 'present',
+                      'bg-danger': record.status === 'absent',
+                      'bg-warning': record.status === 'late',
+                      'bg-info': record.status === 'excused'
+                    }">
+                      {{ record.status === 'present' ? 'Présent' : 
+                         record.status === 'absent' ? 'Absent' : 
+                         record.status === 'late' ? 'En retard' : 'Excusé' }}
+                    </span>
+                  </td>
+                  <td>{{ record.notes || '-' }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Aucun enregistrement (même condition) -->
+      <div *ngIf="attendanceData?.attendance?.length === 0" class="card mb-4">
+        <div class="card-body text-center py-4">
+          <p class="text-muted mb-0">Aucun enregistrement de présence trouvé pour cette séance.</p>
+        </div>
+      </div>
+  
+      <!-- Boutons actions (même logique de routage) -->
+      <div class="actions d-flex justify-content-between">
+        <button routerLink="/dashboard/sessions" class="btn btn-outline-secondary">
+          Retour aux séances
+        </button>
+        <button *ngIf="attendanceData?.session" 
+                routerLink="/dashboard/sessions/{{attendanceData.session._id}}/mark"
+                class="btn btn-primary">
+          Modifier la présence
+        </button>
+      </div>
+    </div>
+</div>

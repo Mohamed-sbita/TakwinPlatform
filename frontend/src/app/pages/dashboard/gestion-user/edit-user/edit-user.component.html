@@ -1,0 +1,148 @@
+<div class="container">
+  <div class="header">
+    <h1>Modifier l'Utilisateur</h1>
+    <button class="back-btn" routerLink="/dashboard/utilisateur">
+      <i class="fas fa-arrow-left"></i> Retour à la liste
+    </button>
+  </div>
+
+  <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="user-form" *ngIf="!isLoading">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="nom">Nom*</label>
+        <input type="text" id="nom" formControlName="nom">
+        <div *ngIf="userForm.get('nom')?.invalid && userForm.get('nom')?.touched" class="error-message">
+          <span *ngIf="userForm.get('nom')?.errors?.['required']">Le nom est obligatoire</span>
+          <span *ngIf="userForm.get('nom')?.errors?.['minlength']">Minimum 2 caractères requis</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="prenom">Prénom*</label>
+        <input type="text" id="prenom" formControlName="prenom">
+        <div *ngIf="userForm.get('prenom')?.invalid && userForm.get('prenom')?.touched" class="error-message">
+          <span *ngIf="userForm.get('prenom')?.errors?.['required']">Le prénom est obligatoire</span>
+          <span *ngIf="userForm.get('prenom')?.errors?.['minlength']">Minimum 2 caractères requis</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email*</label>
+      <input type="email" id="email" formControlName="email">
+      <div *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched" class="error-message">
+        <span *ngIf="userForm.get('email')?.errors?.['required']">L'email est obligatoire</span>
+        <span *ngIf="userForm.get('email')?.errors?.['email']">Veuillez entrer un email valide</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="password">Mot de passe (laisser vide pour conserver l'actuel)</label>
+      <div class="password-container">
+        <input [type]="showPassword ? 'text' : 'password'" id="password" formControlName="password">
+        <button type="button" class="toggle-password" (click)="togglePasswordVisibility()">
+          <i [class]="showPassword ? 'far fa-eye-slash' : 'far fa-eye'"></i>
+        </button>
+      </div>
+      <div *ngIf="userForm.get('password')?.invalid && userForm.get('password')?.touched" class="error-message">
+        <span *ngIf="userForm.get('password')?.errors?.['minlength']">Minimum 6 caractères requis</span>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="tel">Téléphone</label>
+        <input type="tel" id="tel" formControlName="tel">
+        <div *ngIf="userForm.get('tel')?.invalid && userForm.get('tel')?.touched" class="error-message">
+          Veuillez entrer un numéro valide (8-15 chiffres)
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="role">Rôle*</label>
+        <select id="role" formControlName="role">
+          <option value="admin">Administrateur</option>
+          <option value="formateur">Formateur</option>
+          <option value="stagiaire">Stagiaire</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="codeInscription">Code d'Inscription</label>
+      <input type="text" id="codeInscription" formControlName="codeInscription">
+    </div>
+
+    <div class="form-group">
+      <label>Photo de Profil</label>
+      <div class="image-upload-container">
+        <div class="image-preview">
+          <img [src]="imagePreview || 'http://127.0.0.1:3000/files/' + userImage" 
+               alt="Aperçu du profil" 
+               class="preview-image">
+        </div>
+        <input type="file" id="image" accept="image/*" (change)="onFileChange($event)">
+        <label for="image" class="upload-btn">
+          <i class="fas fa-camera"></i> Changer l'image
+        </label>
+      </div>
+    </div>
+
+    <div *ngIf="userForm.get('role')?.value === 'stagiaire'">
+      <div class="form-group">
+        <label for="dateNaissance">Date de Naissance</label>
+        <input type="date" id="dateNaissance" formControlName="dateNaissance">
+      </div>
+
+      <div class="form-group">
+        <label for="adresse">Adresse</label>
+        <input type="text" id="adresse" formControlName="adresse">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="nomParent">Nom du Parent</label>
+          <input type="text" id="nomParent" formControlName="nomParent">
+        </div>
+
+        <div class="form-group">
+          <label for="telParent">Téléphone du Parent</label>
+          <input type="tel" id="telParent" formControlName="telParent">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="idClasse">Classe</label>
+          <select id="idClasse" formControlName="idClasse" (change)="onClasseChange(userForm.value.idClasse)">
+            <option value="">Sélectionner une classe</option>
+            <option *ngFor="let classe of classes" [value]="classe._id">{{classe.nom}}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="idGroupe">Groupe</label>
+          <select id="idGroupe" formControlName="idGroupe">
+            <option value="">Sélectionner un groupe</option>
+            <option *ngFor="let groupe of groupes" [value]="groupe._id">{{groupe.nom}}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" [disabled]="userForm.invalid || isLoading" class="submit-btn">
+        <span *ngIf="!isLoading">Mettre à jour</span>
+        <span *ngIf="isLoading" class="spinner"></span>
+      </button>
+      <button type="button" class="cancel-btn" routerLink="/dashboard/utilisateur">
+        Annuler
+      </button>
+    </div>
+  </form>
+
+  <div *ngIf="isLoading" class="loading-overlay">
+    <div class="spinner"></div>
+    <p>Chargement des données utilisateur...</p>
+  </div>
+</div>

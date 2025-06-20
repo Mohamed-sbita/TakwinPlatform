@@ -1,0 +1,146 @@
+<div class="container">
+  <div class="header">
+    <h1>Créer un nouvel emploi du temps</h1>
+    <button class="back-btn" routerLink="/dashboard/emplois-du-temps">
+      <i class="fas fa-arrow-left"></i> Retour
+    </button>
+  </div>
+
+  <form [formGroup]="emploiForm" (ngSubmit)="onSubmit()" class="emploi-form">
+    <div class="form-group">
+      <label for="titre">Titre*</label>
+      <input type="text" id="titre" formControlName="titre">
+      <div *ngIf="emploiForm.get('titre')?.invalid && (emploiForm.get('titre')?.dirty || emploiForm.get('titre')?.touched)" 
+           class="error-message">
+        <span *ngIf="emploiForm.get('titre')?.errors?.['required']">Le titre est obligatoire</span>
+        <span *ngIf="emploiForm.get('titre')?.errors?.['minlength']">Minimum 3 caractères</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea id="description" formControlName="description" rows="3"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="classe">Classe*</label>
+      <select id="classe" formControlName="classe">
+        <option value="">Sélectionner une classe</option>
+        <option *ngFor="let classe of classes" [value]="classe._id">
+          {{ classe.nom }}
+        </option>
+      </select>
+      <div *ngIf="emploiForm.get('classe')?.invalid && (emploiForm.get('classe')?.dirty || emploiForm.get('classe')?.touched)" 
+           class="error-message">
+        <span *ngIf="emploiForm.get('classe')?.errors?.['required']">La classe est obligatoire</span>
+      </div>
+    </div>
+
+    <div class="jours-container">
+      <div *ngFor="let jour of joursSemaine; let i = index" class="jour-section">
+        <h3>{{ jour }}</h3>
+        
+        <button type="button" (click)="addCreneau(i)" class="add-creneau-btn">
+          <i class="fas fa-plus"></i> Ajouter un créneau
+        </button>
+
+        <div *ngIf="i < joursArray.length">
+          <div formArrayName="jours">
+            <div [formGroupName]="i">
+              <div formArrayName="creneaux" class="creneaux-list">
+                <div *ngFor="let creneau of getCreneauxArray(i).controls; let j = index" 
+                     [formGroupName]="j" class="creneau-item">
+                  <div class="creneau-form">
+                    <div class="form-group">
+                      <label>Heure début*</label>
+                      <select formControlName="heureDebut" 
+                              (change)="onTimeRangeChange(i, j)">
+                        <option value="">-- Sélectionner --</option>
+                        <option *ngFor="let creneauHoraire of creneauxHoraires; let idx = index" 
+                                [value]="creneauHoraire.heureDebut">
+                          {{ creneauHoraire.heureDebut }} (Créneau {{ idx + 1 }})
+                        </option>
+                      </select>
+                      <div *ngIf="creneau.get('heureDebut')?.invalid && (creneau.get('heureDebut')?.dirty || creneau.get('heureDebut')?.touched)" 
+                           class="error-message">
+                        <span *ngIf="creneau.get('heureDebut')?.errors?.['required']">L'heure de début est obligatoire</span>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label>Heure fin*</label>
+                      <select formControlName="heureFin" 
+                              (change)="onTimeRangeChange(i, j)">
+                        <option value="">-- Sélectionner --</option>
+                        <option *ngFor="let creneauHoraire of creneauxHoraires; let idx = index" 
+                                [value]="creneauHoraire.heureFin">
+                          {{ creneauHoraire.heureFin }} (Créneau {{ idx + 1 }})
+                        </option>
+                      </select>
+                      <div *ngIf="creneau.get('heureFin')?.invalid && (creneau.get('heureFin')?.dirty || creneau.get('heureFin')?.touched)" 
+                           class="error-message">
+                        <span *ngIf="creneau.get('heureFin')?.errors?.['required']">L'heure de fin est obligatoire</span>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label>Matière*</label>
+                      <select formControlName="matiere">
+                        <option value="">-- Sélectionner --</option>
+                        <option *ngFor="let matiere of matieres" [value]="matiere._id">
+                          {{ matiere.nom }}
+                        </option>
+                      </select>
+                      <div *ngIf="creneau.get('matiere')?.invalid && (creneau.get('matiere')?.dirty || creneau.get('matiere')?.touched)" 
+                           class="error-message">
+                        <span *ngIf="creneau.get('matiere')?.errors?.['required']">La matière est obligatoire</span>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label>Formateur*</label>
+                      <select formControlName="formateur">
+                        <option value="">-- Sélectionner --</option>
+                        <option *ngFor="let formateur of formateurs" [value]="formateur._id">
+                          {{ formateur.nom }} {{ formateur.prenom }}
+                        </option>
+                      </select>
+                      <div *ngIf="creneau.get('formateur')?.invalid && (creneau.get('formateur')?.dirty || creneau.get('formateur')?.touched)" 
+                           class="error-message">
+                        <span *ngIf="creneau.get('formateur')?.errors?.['required']">Le formateur est obligatoire</span>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label>Salle*</label>
+                      <input type="text" formControlName="salle" placeholder="Ex: Salle 101" />
+                      <div *ngIf="creneau.get('salle')?.invalid && (creneau.get('salle')?.dirty || creneau.get('salle')?.touched)" 
+                           class="error-message">
+                        <span *ngIf="creneau.get('salle')?.errors?.['required']">La salle est obligatoire</span>
+                      </div>
+                    </div>
+                    
+
+                    <button type="button" (click)="removeCreneau(i, j)" class="remove-creneau-btn">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" [disabled]="emploiForm.invalid || isLoading" class="submit-btn">
+        <span *ngIf="!isLoading">Créer l'emploi du temps</span>
+        <span *ngIf="isLoading" class="spinner"></span>
+      </button>
+    </div>
+  </form>
+</div>

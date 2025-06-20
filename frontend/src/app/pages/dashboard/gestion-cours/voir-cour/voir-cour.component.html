@@ -1,0 +1,51 @@
+<div class="container article-container mt-4 mb-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+     
+       
+        <!-- Content -->
+        <div  class="card article-card">
+         
+  
+          <!-- Article body -->
+          <div class="card-body">
+            <!-- Category badge -->
+            
+            <!-- Title -->
+            <h1 class="card-title article-title">{{ cours.title }}</h1>
+            
+            <!-- Meta info -->
+            <div class="article-meta mb-4">
+              <span class="text-muted">
+                <i class="bi bi-calendar"></i> Publié le {{ (cours.createdAt | date:'dd/MM/yyyy à HH:mm' ) }}
+              </span>
+              <span *ngIf="cours.author?.nom" class="text-muted ms-3">
+                <i class="bi bi-person"></i> Par : <strong>{{ cours.author.nom + ' ' + cours.author.prenom }}</strong>
+              </span>
+            </div>
+            
+            <!-- Tags -->
+           
+            
+            <!-- Content -->
+            
+            <!-- Attachment -->
+            <div *ngIf="cours.attachement" class="mt-4 pt-3 border-top">
+              <h5 class="mb-3">Fichier joint</h5>
+              <a 
+                [href]="getAttachmentUrl(cours.attachement)" 
+                target="_blank" 
+                class="btn btn-outline-primary"
+              >
+                <i class="bi bi-download"></i> Télécharger le fichier
+              </a>
+
+              <div class="d-flex justify-content-between mt-4">
+                <button type="button" class="btn btn-secondary" routerLink="/dashboard/cours">Retour</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

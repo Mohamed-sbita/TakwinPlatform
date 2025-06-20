@@ -1,0 +1,32 @@
+<div class="container mt-5">
+    <h2>Créer un nouveau groupe</h2>
+    
+    <form [formGroup]="groupeForm" (ngSubmit)="onSubmit()" class="mt-4">
+      <div class="mb-3">
+        <label for="nom" class="form-label">Nom du groupe*</label>
+        <input type="text" class="form-control" id="nom" formControlName="nom">
+        <div *ngIf="groupeForm.get('nom')?.invalid && groupeForm.get('nom')?.touched" class="text-danger">
+          <small *ngIf="groupeForm.get('nom')?.errors?.['required']">Le nom est obligatoire</small>
+          <small *ngIf="groupeForm.get('nom')?.errors?.['minlength']">Minimum 2 caractères</small>
+        </div>
+      </div>
+  
+      <div class="mb-3">
+        <label for="idClasse" class="form-label">Classe*</label>
+        <select class="form-select" id="idClasse" formControlName="idClasse">
+          <option value="">Sélectionner une classe</option>
+          <option *ngFor="let classe of classes" [value]="classe._id">
+            {{ classe.nom }} ({{ classe.idDepartment?.nom || 'Sans département' }})
+          </option>
+        </select>
+        <div *ngIf="groupeForm.get('idClasse')?.invalid && groupeForm.get('idClasse')?.touched" class="text-danger">
+          <small>La classe est obligatoire</small>
+        </div>
+      </div>
+  
+      <div class="d-flex justify-content-between mt-4">
+        <button type="button" class="btn btn-secondary" routerLink="/dashboard/groupes">Annuler</button>
+        <button type="submit" class="btn btn-primary" [disabled]="groupeForm.invalid">Créer</button>
+      </div>
+    </form>
+  </div>

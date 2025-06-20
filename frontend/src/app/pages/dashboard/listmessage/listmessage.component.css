@@ -1,0 +1,27 @@
+/* Style minimal pour la modal */
+.modal {
+    display: none;
+  }
+  
+  .modal.show {
+    display: block;
+  }
+  
+  .modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1040;
+    width: 100vw;
+    height: 100vh;
+    background-color: #000;
+    opacity: 0.5;
+  }
+  
+  /* Amélioration du tableau */
+  .table th {
+    white-space: nowrap;
+  }
+  
+  /* Icônes Bootstrap */
+  @import "~bootstrap-icons/font/bootstrap-icons.css";

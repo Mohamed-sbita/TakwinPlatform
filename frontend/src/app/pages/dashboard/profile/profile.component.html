@@ -1,0 +1,80 @@
+
+<div class="container mt-4">
+    <div class="card">
+      <div class="card-header bg-primary text-white">
+        <h4 class="mb-0 text-light">User Profile</h4>
+      </div>
+      <div class="card-body">
+        <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+          <div class="row">
+            <!-- Profile Picture -->
+            <div class="col-md-4 text-center">
+              <div class="profile-image-container mb-3">
+                <img [src]="getProfileImage()" class="profile-image" alt="Profile Picture">
+                <div class="image-upload-overlay">
+                  <label class="btn btn-sm btn-light">
+                    <i class="bx bx-camera"></i> Change Photo
+                    <input type="file" accept="image/*" (change)="onFileSelected($event)" style="display: none;">
+                  </label>
+                </div>
+              </div>
+              
+              <div *ngIf="isUploading" class="mt-2">
+                <div class="progress">
+                  <div class="progress-bar" [style.width.%]="uploadProgress"></div>
+                </div>
+                <small>Uploading: {{uploadProgress}}%</small>
+              </div>
+            </div>
+            
+            <!-- Profile Form -->
+            <div class="col-md-8">
+              <div class="mb-3">
+                <label class="form-label">Nom complet </label>
+                <input type="text" class="form-control" formControlName="fullname">
+                <div *ngIf="profileForm.get('fullname')?.invalid && profileForm.get('fullname')?.touched" 
+                     class="text-danger">
+                  Nom complet est requis
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" formControlName="email">
+                <div *ngIf="profileForm.get('email')?.invalid && profileForm.get('email')?.touched" 
+                     class="text-danger">
+                   email est requis
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label class="form-label"> Numero de Telephone </label>
+                <input type="tel" class="form-control" formControlName="tel">
+              </div>
+              
+              <div class="mb-3">
+                <label class="form-label"> nouvaeu mot de passe </label>
+                <input type="password" class="form-control" formControlName="password">
+              </div>
+              
+              <div class="mb-3">
+                <label class="form-label"> confirmation  du mot de passe </label>
+                <input type="password" class="form-control" formControlName="confirmPassword">
+                <div *ngIf="profileForm.hasError('mismatch')" class="text-danger">
+                  Les mots de passe ne correspondent pas
+                </div>
+              </div>
+              
+              <button type="submit" class="btn btn-primary" [disabled]="profileForm.invalid || isUploading">
+                <span *ngIf="!isUploading">Mise à jour du Profile</span>
+                <span *ngIf="isUploading">
+                  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                  Mise à jour en cours...
+                </span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>

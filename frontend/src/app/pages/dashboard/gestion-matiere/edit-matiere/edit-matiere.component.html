@@ -1,0 +1,52 @@
+<div class="container">
+    <div class="header">
+      <h1>Modifier la matière</h1>
+      <button class="back-btn" routerLink="/dashboard/matieres">
+        <i class="fas fa-arrow-left"></i> Retour
+      </button>
+    </div>
+  
+    <form [formGroup]="matiereForm" (ngSubmit)="onSubmit()" class="matiere-form">
+      <div class="form-group">
+        <label for="nom">Nom de la matière*</label>
+        <input type="text" id="nom" formControlName="nom">
+        <div *ngIf="nom?.invalid && (nom?.dirty || nom?.touched)" class="error-message">
+          <span *ngIf="nom?.errors?.['required']">Le nom est obligatoire</span>
+          <span *ngIf="nom?.errors?.['minlength']">Minimum 3 caractères</span>
+        </div>
+      </div>
+  
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea id="description" formControlName="description" rows="3"></textarea>
+      </div>
+  
+      
+  
+      <div class="form-group">
+        <label>Classes associées</label>
+        <div class="classes-list">
+          <div *ngFor="let classe of classes" class="class-item">
+            <input 
+              type="checkbox" 
+              [id]="'classe-' + classe._id" 
+              [checked]="selectedClasses.includes(classe._id)"
+              (change)="toggleClassSelection(classe._id)"
+            >
+            <label [for]="'classe-' + classe._id">{{ classe.nom }}</label>
+          </div>
+        </div>
+      </div>
+  
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
+  
+      <div class="form-actions">
+        <button type="submit" [disabled]="matiereForm.invalid || isLoading" class="submit-btn">
+          <span *ngIf="!isLoading">Mettre à jour</span>
+          <span *ngIf="isLoading" class="spinner"></span>
+        </button>
+      </div>
+    </form>
+  </div>

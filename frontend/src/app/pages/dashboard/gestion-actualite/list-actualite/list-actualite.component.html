@@ -1,0 +1,88 @@
+<div class="container mt-4">
+    <div class="row mb-4">
+      <div class="col-md-6">
+        <h2>Liste des Actualités</h2>
+      </div>
+      <div class="col-md-6 text-end">
+        <a routerLink="/dashboard/actualite/create" class="btn btn-primary">
+          <i class="fas fa-plus"></i> Ajouter une actualité
+        </a>
+      </div>
+    </div>
+  
+    <div class="row mb-4">
+      <div class="col-md-4">
+        <select class="form-select" [(ngModel)]="selectedCategory" (change)="filterByCategory()">
+          <option *ngFor="let category of categories" [value]="category">
+            {{ category | titlecase }}
+          </option>
+        </select>
+      </div>
+      <div class="col-md-8">
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="Rechercher..." 
+                 [(ngModel)]="searchTerm" (input)="searchActualites()">
+          <span class="input-group-text"><i class="fas fa-search"></i></span>
+        </div>
+      </div>
+    </div>
+  
+    <div *ngIf="filteredActualites.length === 0" class="alert alert-info">
+      Aucune actualité trouvée.
+    </div>
+  
+    <div class="row">
+      <div class="col-lg-4 col-md-6 mb-4" *ngFor="let actualite of filteredActualites | paginate: { 
+        itemsPerPage: itemsPerPage, 
+        currentPage: p,
+        totalItems: filteredActualites.length 
+      }">
+        <div class="card h-100">
+          <img *ngIf="actualite.image" [src]="'http://127.0.0.1:3000/files/' + actualite.image" 
+               class="card-img-top" alt="{{actualite.title}}">
+          <div class="card-body">
+            <span class="badge bg-secondary mb-2">{{actualite.categorie | titlecase}}</span>
+            <h5 class="card-title">{{actualite.title}}</h5>
+            <p class="card-text text-muted">
+              {{actualite.content | slice:0:100}}...
+            </p>
+            <div *ngIf="actualite.tags && actualite.tags.length > 0" class="mb-2">
+              <span class="badge bg-light text-dark me-1" *ngFor="let tag of actualite.tags">
+                {{tag}}
+              </span>
+            </div>
+          </div>
+          <div class="card-footer bg-transparent">
+            <small class="text-muted">
+              Créé le {{actualite.createdAt | date:'dd/MM/yyyy'}}
+            </small>
+            <div class="btn-group float-end">
+              <a [routerLink]="['/dashboard/actualite/view', actualite._id]" class="btn btn-sm btn-outline-primary">
+                <i class="fas fa-eye"></i>
+              </a>
+              <a [routerLink]="['/dashboard/actualite/edit', actualite._id]" class="ms-2 btn btn-sm btn-outline-primary">
+                <i class="fas fa-edit"></i>
+              </a>
+              <button (click)="deleteActualite(actualite._id)" class="ms-2 btn btn-sm btn-outline-danger">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="row mt-5">
+      <div class="col-12 d-flex justify-content-center">
+        <pagination-controls 
+          (pageChange)="p = $event" 
+          previousLabel="Précédent"
+          nextLabel="Suivant"
+          class="custom-pagination"
+          screenReaderPaginationLabel="Pagination"
+          screenReaderPageLabel="page"
+          screenReaderCurrentLabel="You're on page">
+        </pagination-controls>
+      </div>
+    </div>
+  </div>

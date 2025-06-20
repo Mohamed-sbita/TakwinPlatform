@@ -1,0 +1,151 @@
+.container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .back-btn {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .emploi-form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+  }
+  
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  .form-group textarea {
+    min-height: 80px;
+    resize: vertical;
+  }
+  
+  .error-message {
+    color: #dc3545;
+    font-size: 14px;
+    margin-top: 5px;
+  }
+  
+  .jours-container {
+    margin-top: 30px;
+  }
+  
+  .jour-section {
+    margin-bottom: 30px;
+    padding: 15px;
+    border: 1px solid #eee;
+    border-radius: 4px;
+  }
+  
+  .jour-section h3 {
+    margin-top: 0;
+    color: #333;
+  }
+  
+  .add-creneau-btn {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    cursor: pointer;
+  }
+  
+  .creneaux-list {
+    margin-top: 10px;
+  }
+  
+  .creneau-item {
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+  }
+  
+  .creneau-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+    align-items: end;
+  }
+  
+  .remove-creneau-btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 6px;
+    border-radius: 4px;
+    cursor: pointer;
+    height: fit-content;
+  }
+  
+  .form-actions {
+    margin-top: 30px;
+    text-align: right;
+  }
+  
+  .submit-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .submit-btn:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+  }
+  
+  .spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+  }
+  
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  
+  .loading {
+    text-align: center;
+    padding: 40px;
+  }

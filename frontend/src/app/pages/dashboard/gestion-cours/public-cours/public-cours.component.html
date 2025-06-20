@@ -1,0 +1,46 @@
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2>Liste des Cours</h2>
+     
+    </div>
+  
+    <div class="card">
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Titre</th>
+                <th>Formateur</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let cours of coursList ; index as i">
+               <td>{{ i + 1 }}</td>
+                <td>{{ cours.title }}</td>
+                <td>{{ cours.author.fullname }}</td>
+                
+                <td>
+                  <div class="btn-group" role="group">
+                    <a  class="btn btn-sm btn-outline-info"  [routerLink]="['/dashboard/cours/vieww/', cours._id]">
+                      <i class="bi bi-eye"></i> Voir
+                    </a>
+                    
+                   
+                  </div>
+                </td>
+              </tr>
+              <tr *ngIf="coursList.length === 0">
+                <td colspan="5" class="text-center">Aucun cours trouvé</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+  
+        
+      </div>
+    </div>
+  </div>
+  

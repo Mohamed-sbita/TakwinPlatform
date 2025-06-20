@@ -1,0 +1,75 @@
+<div class="container">
+  <div class="header">
+    <h1>Liste des Matières</h1>
+    <a routerLink="/dashboard/matieres/create" class="btn btn-primary">
+      <i class="fas fa-plus"></i> Ajouter une matière
+    </a>
+  </div>
+
+  <!-- Add filter section -->
+  <div class="filter-section">
+    <div class="search-box">
+      <i class="fas fa-search"></i>
+      <input 
+        type="text" 
+        [(ngModel)]="searchTerm" 
+        (input)="filterMatieres()"
+        placeholder="Rechercher une matière..." 
+        class="search-input"
+      >
+      <button *ngIf="searchTerm" (click)="searchTerm = ''; filterMatieres()" class="clear-search">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="loading">
+    <div class="spinner"></div>
+    <p>Chargement en cours...</p>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="!isLoading && filteredMatieres.length === 0" class="no-data">
+    <p *ngIf="searchTerm">Aucune matière ne correspond à votre recherche</p>
+    <p *ngIf="!searchTerm">Aucune matière disponible</p>
+  </div>
+
+  <div *ngIf="!isLoading && filteredMatieres.length > 0" class="matiere-list">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Description</th>
+          <th>Classes</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let matiere of filteredMatieres">
+          <td>{{ matiere.nom }}</td>
+          <td>{{ matiere.description || '-' }}</td>
+          
+          <td>
+            <div *ngIf="matiere.classes && matiere.classes.length > 0" class="classes">
+              <span *ngFor="let classe of matiere.classes" class="badge bg-success">
+                {{ classe.nom }}
+              </span>
+            </div>
+            <span *ngIf="!matiere.classes || matiere.classes.length === 0">-</span>
+          </td>
+          <td class="actions">
+            <a [routerLink]="['/dashboard/matieres/edit', matiere._id]" class="btn btn-edit">
+              <i class="fas fa-edit"></i>
+            </a>
+            <button (click)="confirmDelete(matiere._id)" class="btn btn-delete">
+              <i class="fas fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

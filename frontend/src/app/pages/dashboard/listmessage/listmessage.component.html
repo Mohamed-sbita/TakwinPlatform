@@ -1,0 +1,81 @@
+<div class="container mt-4">
+    <h2 class="mb-4">Messages de contact</h2>
+  
+    <!-- Alertes -->
+    <div *ngIf="loading" class="alert alert-info">Chargement...</div>
+    <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+  
+    <!-- Tableau -->
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Nom</th>
+            <th>Email</th>
+            <th>Sujet</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let message of messages">
+            <td>{{ message.name }}</td>
+            <td>{{ message.email }}</td>
+            <td>{{ message.subject }}</td>
+            <td>{{ message.createdAt | date:'shortDate' }}</td>
+            <td>
+              <!-- Bouton pour ouvrir la modal -->
+              <button 
+                class="btn btn-sm btn-primary me-2"
+                data-bs-toggle="modal" 
+                data-bs-target="#messageModal"
+                (click)="openModal(message)">
+                <i class="bx bx-eye"></i> Voir
+              </button>
+              
+              <button 
+                (click)="deleteMessage(message._id)" 
+                class="btn btn-sm btn-danger">
+                <i class="bx bx-trash"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+    <!-- Modal Bootstrap -->
+    <div *ngIf="selectedMessage" class="modal fade" id="messageModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Message de {{ selectedMessage.name }}</h5>
+            <button 
+              type="button" 
+              class="btn-close" 
+              data-bs-dismiss="modal">
+            </button>
+          </div>
+          <div class="modal-body">
+            <p><strong>Email:</strong> {{ selectedMessage.email }}</p>
+            <p><strong>Sujet:</strong> {{ selectedMessage.subject }}</p>
+            <p><strong>Date:</strong> {{ selectedMessage.createdAt | date:'medium' }}</p>
+            <hr>
+            <div class="card">
+              <div class="card-body">
+                {{ selectedMessage.message }}
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button 
+              type="button" 
+              class="btn btn-secondary" 
+              data-bs-dismiss="modal">
+              Fermer
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

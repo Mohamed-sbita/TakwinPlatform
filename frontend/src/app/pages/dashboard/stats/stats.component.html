@@ -1,0 +1,83 @@
+<div class="dashboard">
+    <div class="dashboard-header">
+      <h2>{{ isAdmin ? 'Tableau de bord Admin' : 'Tableau de bord Formateur' }}</h2>
+    </div>
+    
+    <!-- Cartes de statistiques -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <h3>Étudiants</h3>
+        <div class="stat-value">{{ stats.totalStudents | number }}</div>
+      </div>
+      
+      <div class="stat-card" *ngIf="isAdmin">
+        <h3>Enseignants</h3>
+        <div class="stat-value">{{ stats.totalTeachers | number }}</div>
+      </div>
+      <div class="stat-card"  *ngIf="isAdmin">
+        <h3>Specialitées</h3>
+        <div class="stat-value">{{ stats.totalDepartments | number }}</div>
+      </div>
+      <div class="stat-card" *ngIf="isAdmin" routerLink="/dashboard/classes">
+        <h3>Classes</h3>
+        <div class="stat-value">{{ stats.totalClasses | number }}</div>
+      </div>
+      
+      <div class="stat-card" *ngIf="!isAdmin">
+        <h3>Sessions</h3>
+        <div class="stat-value">{{ stats.totalSessions | number }}</div>
+      </div>
+      
+      <div class="stat-card" routerLink="/dashboard/gestion-absences">
+        <h3>Taux de présence</h3>
+        <div class="stat-value">{{ stats.attendanceRate | number:'1.1-1' }}%</div>
+      </div>
+      
+      
+    </div>
+  
+    <!-- Section des graphiques -->
+    <div class="charts-container">
+      <div class="chart-card">
+        <h3>Répartition des étudiants</h3>
+        <div class="chart-wrapper">
+          <canvas baseChart
+            [data]="barChartData"
+            [type]="'bar'"
+            [options]="chartOptions">
+          </canvas>
+          <div class="loading-overlay" *ngIf="isLoading">
+            <div class="loading-spinner"></div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="chart-card">
+        <h3>Tendance des présences</h3>
+        <div class="chart-wrapper">
+          <canvas baseChart
+            [data]="lineChartData"
+            [type]="'line'"
+            [options]="chartOptions">
+          </canvas>
+          <div class="loading-overlay" *ngIf="isLoading">
+            <div class="loading-spinner"></div>
+          </div>
+        </div>
+      </div>
+  
+      <div class="chart-card" *ngIf="isAdmin">
+        <h3>Répartition par département</h3>
+        <div class="chart-wrapper">
+          <canvas baseChart
+            [data]="pieChartData"
+            [type]="'pie'"
+            [options]="chartOptions">
+          </canvas>
+          <div class="loading-overlay" *ngIf="isLoading">
+            <div class="loading-spinner"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

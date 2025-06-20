@@ -1,0 +1,66 @@
+<div class="container mt-5">
+    <h2>Modifier l'actualité</h2>
+    
+    <form [formGroup]="actualiteForm" (ngSubmit)="onSubmit()" class="mt-4">
+      <div class="mb-3">
+        <label for="title" class="form-label">Titre*</label>
+        <input type="text" class="form-control" id="title" formControlName="title">
+        <div *ngIf="actualiteForm.get('title')?.invalid && actualiteForm.get('title')?.touched" class="text-danger">
+          <small *ngIf="actualiteForm.get('title')?.errors?.['required']">Le titre est obligatoire</small>
+          <small *ngIf="actualiteForm.get('title')?.errors?.['minlength']">Minimum 5 caractères</small>
+        </div>
+      </div>
+  
+      <div class="mb-3">
+        <label for="content" class="form-label">Contenu*</label>
+        <textarea class="form-control" id="content" rows="5" formControlName="content"></textarea>
+        <div *ngIf="actualiteForm.get('content')?.invalid && actualiteForm.get('content')?.touched" class="text-danger">
+          <small *ngIf="actualiteForm.get('content')?.errors?.['required']">Le contenu est obligatoire</small>
+          <small *ngIf="actualiteForm.get('content')?.errors?.['minlength']">Minimum 20 caractères</small>
+        </div>
+      </div>
+  
+      <div class="mb-3">
+        <label for="categorie" class="form-label">Catégorie*</label>
+        <select class="form-select" id="categorie" formControlName="categorie">
+          <option *ngFor="let cat of categories" [value]="cat">{{ cat | titlecase }}</option>
+        </select>
+      </div>
+  
+      <div class="mb-3">
+        <label for="tags" class="form-label">Tags (séparés par des virgules)</label>
+        <input type="text" class="form-control" id="tags" formControlName="tags">
+      </div>
+  
+      <div class="mb-3">
+        <label for="image" class="form-label">Image</label>
+        <input type="file" class="form-control mb-2" id="image" (change)="onImageSelected($event)" accept="image/*">
+        
+        <div *ngIf="currentImageUrl" class="d-flex align-items-center mb-2">
+          <img [src]="currentImageUrl" alt="Current Image" class="img-thumbnail me-2" style="max-height: 100px;">
+          <button type="button" class="btn btn-sm btn-danger" (click)="removeImage()">
+            <i class="bi bi-trash"></i> Supprimer
+          </button>
+        </div>
+      </div>
+  
+      <div class="mb-3">
+        <label for="attachment" class="form-label">Fichier joint</label>
+        <input type="file" class="form-control mb-2" id="attachment" (change)="onAttachmentSelected($event)">
+        
+        <div *ngIf="currentAttachmentUrl" class="d-flex align-items-center mb-2">
+          <a [href]="currentAttachmentUrl" target="_blank" class="me-2">
+            <i class="bi bi-file-earmark"></i> Voir le fichier actuel
+          </a>
+          <button type="button" class="btn btn-sm btn-danger" (click)="removeAttachment()">
+            <i class="bi bi-trash"></i> Supprimer
+          </button>
+        </div>
+      </div>
+  
+      <div class="d-flex justify-content-between mt-4">
+        <button type="button" class="btn btn-secondary" routerLink="/dashboard/actualite">Annuler</button>
+        <button type="submit" class="btn btn-primary" [disabled]="actualiteForm.invalid">Enregistrer</button>
+      </div>
+    </form>
+  </div>

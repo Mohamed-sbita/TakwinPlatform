@@ -1,0 +1,167 @@
+<div class="container">
+  <div class="header">
+    <h1>Créer un Utilisateur</h1>
+    <button class="back-btn" routerLink="/dashboard/utilisateur">
+      <i class="fas fa-arrow-left"></i> Retour aux utilisateurs
+    </button>
+  </div>
+
+  <div class="tabs">
+    <button 
+      [class.active]="activeTab === 'single'" 
+      (click)="switchTab('single')">
+      Utilisateur unique
+    </button>
+    <button 
+      [class.active]="activeTab === 'bulk'" 
+      (click)="switchTab('bulk')">
+      Import en masse
+    </button>
+  </div>
+
+  <!-- Formulaire de création d'un utilisateur -->
+  <form *ngIf="activeTab === 'single'" [formGroup]="userForm" (ngSubmit)="createSingleUser()" class="user-form">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="nom">Nom*</label>
+        <input type="text" id="nom" formControlName="nom">
+        <div *ngIf="userForm.get('nom')?.invalid && userForm.get('nom')?.touched" class="error-message">
+          <span *ngIf="userForm.get('nom')?.errors?.['required']">Le nom est obligatoire</span>
+          <span *ngIf="userForm.get('nom')?.errors?.['minlength']">Minimum 2 caractères requis</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="prenom">Prénom*</label>
+        <input type="text" id="prenom" formControlName="prenom">
+        <div *ngIf="userForm.get('prenom')?.invalid && userForm.get('prenom')?.touched" class="error-message">
+          <span *ngIf="userForm.get('prenom')?.errors?.['required']">Le prénom est obligatoire</span>
+          <span *ngIf="userForm.get('prenom')?.errors?.['minlength']">Minimum 2 caractères requis</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email*</label>
+      <input type="email" id="email" formControlName="email">
+      <div *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched" class="error-message">
+        <span *ngIf="userForm.get('email')?.errors?.['required']">L'email est obligatoire</span>
+        <span *ngIf="userForm.get('email')?.errors?.['email']">Veuillez entrer un email valide</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="password">Mot de passe*</label>
+      <div class="password-container">
+        <input [type]="showPassword ? 'text' : 'password'" id="password" formControlName="password">
+        <button type="button" class="toggle-password" (click)="togglePasswordVisibility()">
+          <i [class]="showPassword ? 'far fa-eye-slash' : 'far fa-eye'"></i>
+        </button>
+      </div>
+      <div *ngIf="userForm.get('password')?.invalid && userForm.get('password')?.touched" class="error-message">
+        <span *ngIf="userForm.get('password')?.errors?.['required']">Le mot de passe est obligatoire</span>
+        <span *ngIf="userForm.get('password')?.errors?.['minlength']">Minimum 6 caractères requis</span>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="tel">Numéro de téléphone</label>
+        <input type="tel" id="tel" formControlName="tel">
+        <div *ngIf="userForm.get('tel')?.invalid && userForm.get('tel')?.touched" class="error-message">
+          Veuillez entrer un numéro valide (8-15 chiffres)
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="role">Rôle*</label>
+        <select id="role" formControlName="role">
+          <option *ngFor="let role of roles" [value]="role">{{role}}</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="dateNaissance">Date de naissance</label>
+      <input type="date" id="dateNaissance" formControlName="dateNaissance">
+    </div>
+
+    <div *ngIf="userForm.get('role')?.value === 'stagiaire'">
+      
+
+      <div class="form-group">
+        <label for="adresse">Adresse</label>
+        <input type="text" id="adresse" formControlName="adresse">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="nomParent">Nom du parent</label>
+          <input type="text" id="nomParent" formControlName="nomParent">
+        </div>
+
+        <div class="form-group">
+          <label for="telParent">Téléphone du parent</label>
+          <input type="tel" id="telParent" formControlName="telParent">
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" [disabled]="userForm.invalid || isLoading" class="submit-btn">
+        <span *ngIf="!isLoading">Créer l'utilisateur</span>
+        <span *ngIf="isLoading" class="spinner"></span>
+      </button>
+    </div>
+  </form>
+
+  <!-- Formulaire d'import en masse -->
+  <div *ngIf="activeTab === 'bulk'" class="bulk-upload-container">
+    <div class="instructions">
+      <h3>Instructions :</h3>
+      <ol>
+        <li>Téléchargez le <a href="../../../../../assets/modelEXEL.xlsx" download>modèle Excel</a></li>
+        <li>Remplissez tous les champs obligatoires pour chaque stagiaire</li>
+        <li>Importez le fichier complété ci-dessous</li>
+      </ol>
+    </div>
+
+    <form [formGroup]="bulkForm" (ngSubmit)="createBulkUsers()" class="bulk-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="idClasse">Classe*</label>
+          <select id="idClasse" formControlName="idClasse" (change)="onClasseChange(bulkForm.value.idClasse)">
+            <option *ngFor="let classe of classes" [value]="classe._id">{{classe.nom}}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="idGroupe">Groupe*</label>
+          <select id="idGroupe" formControlName="idGroupe">
+            <option *ngFor="let groupe of groupes" [value]="groupe._id">{{groupe.nom}}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="file">Fichier Excel*</label>
+        <div class="file-upload">
+          <input type="file" id="file" accept=".xlsx,.xls" (change)="onFileChange($event)" #fileInput>
+          <button type="button" class="browse-btn" (click)="fileInput.click()">
+            <i class="fas fa-file-excel"></i> Parcourir
+          </button>
+          <span class="file-name">{{ selectedFile?.name || 'Aucun fichier sélectionné' }}</span>
+        </div>
+        <div *ngIf="bulkForm.get('file')?.invalid && bulkForm.get('file')?.touched" class="error-message">
+          Veuillez sélectionner un fichier Excel
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" [disabled]="bulkForm.invalid || isLoading" class="submit-btn">
+          <span *ngIf="!isLoading">Importer et créer les stagiaires</span>
+          <span *ngIf="isLoading" class="spinner"></span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

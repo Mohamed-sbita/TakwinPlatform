@@ -1,0 +1,80 @@
+/* Tab styling */
+.nav-tabs {
+    border-bottom: 1px solid #dee2e6;
+    padding: 0 1rem;
+  }
+  
+  .nav-tabs .nav-link {
+    color: #6c757d;
+    border: none;
+    padding: 1rem 1.5rem;
+    font-weight: 500;
+    border-bottom: 3px solid transparent;
+  }
+  
+  .nav-tabs .nav-link:hover {
+    color: #0d6efd;
+    border-color: transparent;
+  }
+  
+  .nav-tabs .nav-link.active {
+    color: #0d6efd;
+    background-color: transparent;
+    border-color: transparent;
+    border-bottom-color: #0d6efd;
+  }
+  
+  /* Table styling */
+  .table {
+    font-size: 0.9rem;
+  }
+  
+  .table th {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    color: #6c757d;
+    border-bottom-width: 1px;
+  }
+  
+  .table td {
+    vertical-align: middle;
+    padding: 0.75rem;
+  }
+  
+  /* Status badges */
+  .bg-warning {
+    background-color: #ffc107 !important;
+    color: #212529;
+  }
+  .bg-success {
+    background-color: #198754 !important;
+  }
+  .bg-danger {
+    background-color: #dc3545 !important;
+  }
+  
+  /* Form card */
+  .form-check-card {
+    border: 1px solid #dee2e6;
+    background-color: #f8f9fa;
+    transition: all 0.2s ease;
+  }
+  
+  .form-check-card:hover {
+    background-color: #f1f3f5;
+    border-color: #adb5bd;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .nav-tabs .nav-link {
+      padding: 0.75rem;
+      font-size: 0.85rem;
+    }
+    
+    .card-body {
+      padding: 1rem;
+    }
+  }

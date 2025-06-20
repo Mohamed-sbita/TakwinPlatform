@@ -1,0 +1,87 @@
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2>Liste des Groupes</h2>
+      <a routerLink="/dashboard/groupes/create" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Ajouter un Groupe
+      </a>
+    </div>
+  
+    <!-- Filter Section -->
+    <div class="card mb-4">
+      <div class="card-body">
+        <div class="row align-items-center">
+          <div class="col-md-4">
+            <label for="classFilter" class="form-label">Filtrer par classe:</label>
+            <select 
+              id="classFilter" 
+              class="form-select" 
+              [(ngModel)]="selectedClass" 
+              (change)="filterByClass()"
+            >
+              <option value="">Toutes les classes</option>
+              <option *ngFor="let classe of classes" [value]="classe._id">
+                {{ classe.nom }} ({{ classe.idDepartment?.nom || 'Sans département' }})
+              </option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <button 
+              class="btn btn-outline-secondary mt-4" 
+              (click)="resetFilter()"
+              [disabled]="!selectedClass"
+            >
+              <i class="bi bi-arrow-counterclockwise"></i> Réinitialiser
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="card">
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Nom</th>
+                <th>Classe</th>
+             
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let groupe of filteredGroupes | paginate: { itemsPerPage: itemsPerPage, currentPage: p }; let i = index">
+                <td>{{ (p - 1) * itemsPerPage + i + 1 }}</td>
+                <td>{{ groupe.nom }}</td>
+                <td>{{ groupe.idClasse?.nom || '-' }}</td>
+              
+                <td>
+                  <div class="btn-group" role="group">
+                    <a [routerLink]="['/dashboard/groupes/edit', groupe._id]" class="btn btn-sm btn-outline-primary">
+                      <i class="bi bi-pencil"></i> Modifier
+                    </a>
+                    <button (click)="deleteGroupe(groupe._id)" class="btn btn-sm btn-outline-danger ms-2">
+                      <i class="bi bi-trash"></i> Supprimer
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <tr *ngIf="filteredGroupes.length === 0">
+                <td colspan="5" class="text-center">Aucun groupe trouvé</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+  
+        <div class="d-flex justify-content-center mt-3" *ngIf="filteredGroupes.length > 0">
+          <pagination-controls 
+            (pageChange)="p = $event"
+            previousLabel="Précédent"
+            nextLabel="Suivant"
+            class="my-pagination">
+          </pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,113 @@
+<div class="container mt-4">
+    <h2 class="mb-4">Gestion des Présences</h2>
+
+    <!-- Loading and Error Messages -->
+    <div *ngIf="isLoading" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-2">Chargement des données...</p>
+    </div>
+
+    <div *ngIf="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+    </div>
+
+    <!-- Filters Section -->
+    <div *ngIf="!isLoading" class="card mb-4">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">Filtres</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <!-- Date Range -->
+                <div class="col-md-3">
+                    <label class="form-label">Date de début</label>
+                    <input type="date" class="form-control" 
+                           [(ngModel)]="filters.startDate">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Date de fin</label>
+                    <input type="date" class="form-control" 
+                           [(ngModel)]="filters.endDate">
+                </div>    
+
+                <!-- Matiere Dropdown -->
+                <div class="col-md-2">
+                    <label class="form-label">Matière</label>
+                    <select class="form-select" [(ngModel)]="filters.matiereId">
+                        <option value="">Toutes les matières</option>
+                        <option *ngFor="let matiere of matieres" [value]="matiere._id">
+                            {{ matiere.nom }}
+                        </option>
+                    </select>
+                </div>
+
+                <!-- Status Dropdown -->
+                <div class="col-md-2">
+                    <label class="form-label">Statut</label>
+                    <select class="form-select" [(ngModel)]="filters.status">
+                        <option *ngFor="let option of statusOptions" [value]="option.value">
+                            {{ option.label }}
+                        </option>
+                    </select>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="col-md-12 text-end">
+                    <button class="btn btn-outline-secondary me-2" (click)="resetFilters()">
+                        Réinitialiser
+                    </button>
+                    <button class="btn btn-primary me-2" (click)="applyFilters()">
+                        Appliquer
+                    </button>
+                  
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Section -->
+    <div *ngIf="!isLoading" class="card">
+        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Résultats</h5>
+            <span class="badge bg-primary">
+                {{ filteredRecords.length }} enregistrements
+            </span>
+        </div>
+        <div class="card-body">
+            <div *ngIf="filteredRecords.length === 0" class="alert alert-info">
+                Aucun enregistrement trouvé avec les critères sélectionnés.
+            </div>
+
+            <div *ngIf="filteredRecords.length > 0" class="table-responsive">
+                <table class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Stagiaire</th>
+                            <th>Formateur</th>
+                            <th>Matière</th>
+                            <th>Groupe</th>
+                            <th>Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let record of filteredRecords">
+                            <td>{{ record.session.date | date:'dd/MM/yyyy' }}</td>
+                            <td>{{ record.stagiaire.nom }} {{ record.stagiaire.prenom }}</td>
+                            <td>{{ record.session.formateur.nom }} {{ record.session.formateur.prenom }}</td>
+                            <td>{{ record.session.matiere.nom }}</td>
+                            <td>{{ record.session.groupe.nom }}</td>
+                            <td>
+                                <span [class]="getStatusClass(record.status)">
+                                    {{ record.status | titlecase }}
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
